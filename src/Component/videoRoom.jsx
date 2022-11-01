@@ -13,27 +13,22 @@ const client = AgoraRTC.createClient({
 
 const VideoRoom = () => {
   const [user, setUser] = useState([]);
-  const [localTracks , setLocalTracks]= useState([]);
+  const [localTracks, setLocalTracks] = useState([]);
 
-    // const handleUserJoined = () => {};
-  const handleUserJoined = async(user, mediaType)=>{
+  // const handleUserJoined = () => {};
+  const handleUserJoined = async (user, mediaType) => {
     await client.subscribe(user, mediaType);
-  
-  if(mediaType === 'video')
-  {
-    setUser((previousUser) => [...previousUser, user]);
-  }
-  if(mediaType === 'audio')
-  {
-    // setUser((previousUser)=> [...previousUser, user]);
-  }
+
+    if (mediaType === "video") {
+      setUser((previousUser) => [...previousUser, user]);
+    }
+    if (mediaType === "audio") {
+      // setUser((previousUser)=> [...previousUser, user]);
+    }
   };
 
-
   const handleUserLeft = (user) => {
-    setUser((previousUser)=>
-    previousUser.filter((u)=> u.uid !== user.uid)
-    );
+    setUser((previousUser) => previousUser.filter((u) => u.uid !== user.uid));
   };
 
   useEffect(() => {
@@ -47,7 +42,7 @@ const VideoRoom = () => {
       )
       .then(([tracks, uid]) => {
         const [audioTrack, videoTrack] = tracks;
-        setLocalTracks(tracks)
+        setLocalTracks(tracks);
         setUser((previousUser) => [
           ...previousUser,
           {
@@ -58,16 +53,15 @@ const VideoRoom = () => {
         ]);
         client.publish(tracks);
       });
-      return () => {
-        for (let localTrack of localTracks)
-        {
-          localTrack.stop();
-          localTrack.close();
-        }
-        client.off('user-published', handleUserJoined);
-        client.off('user-left', handleUserLeft);
-        client.unpublish(tracks).then(()=> client.leave());
-      };
+    return () => {
+      for (let localTrack of localTracks) {
+        localTrack.stop();
+        localTrack.close();
+      }
+      client.off("user-published", handleUserJoined);
+      client.off("user-left", handleUserLeft);
+      client.unpublish(tracks).then(() => client.leave());
+    };
   }, []);
 
   return (
