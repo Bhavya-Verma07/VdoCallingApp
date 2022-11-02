@@ -8,9 +8,9 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Virtual call</h1>
-      {!joined && (
-      <button onClick={()=>setJoined(true)}>Join room</button>
+      <h1 style={{color: 'darkblue'}}>Virtual call</h1>
+      {!joined && ( 
+      <button style={{backgroundColor:"greenyellow"}} onClick={()=>setJoined(true) }>Join room</button>
       )}
       { joined && (
        <VideoRoom/>
